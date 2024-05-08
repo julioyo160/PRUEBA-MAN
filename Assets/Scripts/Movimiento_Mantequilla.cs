@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Movimiento_Mantequilla : MonoBehaviour
@@ -51,6 +52,18 @@ public class Movimiento_Mantequilla : MonoBehaviour
             animator.SetBool("IsJumping", isJumping);
             Debug.Log("salto");
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("isAtacking", true);
+        }
+
+
+    }
+
+    public void endAttack()
+    {
+        animator.SetBool("isAtacking", false);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -105,5 +118,7 @@ public class Movimiento_Mantequilla : MonoBehaviour
         Debug.Log("aterrizo");
 
     }
+
+  
 
 }

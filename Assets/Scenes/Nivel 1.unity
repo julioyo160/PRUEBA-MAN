@@ -793,7 +793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a2094fb5e30874419ccfb186d16984a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 6191009503208609820, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
+  enemyPrefab: {fileID: 8783966794471359055, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
   spawnInterval: 3
   maxEnemies: 4
   player: {fileID: 1383461234}
@@ -841,7 +841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a2094fb5e30874419ccfb186d16984a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 6191009503208609820, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
+  enemyPrefab: {fileID: 8783966794471359055, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
   spawnInterval: 3
   maxEnemies: 5
   player: {fileID: 1383461234}

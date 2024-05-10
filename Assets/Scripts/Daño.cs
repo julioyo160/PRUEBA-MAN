@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class Daño : MonoBehaviour
 {
-    public HP pHealth;
+    private HP pHealth; // Referencia al componente HP
     public float damage;
     public float tiempoEntreDaño = 2f; // Intervalo de tiempo entre cada aplicación de daño
 
-    private bool playerInside = false; // Indica si el jugador está dentro del área de activación
+    public bool playerInside = false; // Indica si el jugador está dentro del área de activación
 
-    // Invocar repetidamente el daño cada 2 segundos si el jugador está dentro del área de activación
-    private void Start()
+    // Buscar el componente HP en el GameObject "Butter" al iniciar
+    void Start()
     {
+        // Intenta encontrar el GameObject llamado "Butter"
+        GameObject butter = GameObject.Find("Butter");
+
+        // Si encontramos el GameObject "Butter", intentamos encontrar el componente HP en él
+        if (butter != null)
+        {
+            pHealth = butter.GetComponent<HP>();
+        }
+
+        // Si no encontramos el componente HP, mostramos un mensaje de error
+        if (pHealth == null)
+        {
+            Debug.LogError("El componente HP no está adjunto al GameObject 'Butter' o el GameObject 'Butter' no se encontró.");
+        }
+
         if (playerInside)
         {
             InvokeRepeating("ApplyDamage", 0f, tiempoEntreDaño);
@@ -20,13 +35,20 @@ public class Daño : MonoBehaviour
     }
 
     // Aplicar el daño al jugador si está dentro del área de activación
-    private void ApplyDamage()
+    public void ApplyDamage()
     {
-        pHealth.health -= damage;
+        if (pHealth != null)
+        {
+            pHealth.health -= damage;
+        }
+        else
+        {
+            Debug.LogError("El componente HP no está adjunto al GameObject 'Butter' o el GameObject 'Butter' no se encontró.");
+        }
     }
 
     // Iniciar la repetición del daño cuando el jugador entra en el área de activación
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
@@ -36,7 +58,7 @@ public class Daño : MonoBehaviour
     }
 
     // Detener la repetición del daño si el jugador sale del área de activación
-    private void OnTriggerExit2D(Collider2D other)
+    public void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {

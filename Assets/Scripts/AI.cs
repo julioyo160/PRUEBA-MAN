@@ -8,15 +8,16 @@ public class AI : MonoBehaviour
     public float distanceBetween;
 
     private Animator animator;
-    public GameObject player; // Ahora se asignará desde el spawner
+    public GameObject player;
     private float distance;
     private Vector2 lastPosition;
-
 
     void Start()
     {
         animator = GetComponent<Animator>();
         lastPosition = transform.position;
+        // Establece la rotación inicial del objeto hacia la derecha
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     void Update()
@@ -37,6 +38,16 @@ public class AI : MonoBehaviour
 
                 // Actualiza la última posición mientras se mueve
                 lastPosition = transform.position;
+
+                // Gira el objeto según la dirección en la que se esté moviendo
+                if (direction.x > 0)
+                {
+                    transform.rotation = Quaternion.Euler(0, 180, 0); // Orientación hacia la derecha
+                }
+                else if (direction.x < 0)
+                {
+                    transform.rotation = Quaternion.Euler(0, 0, 0); // Orientación hacia la izquierda
+                }
             }
             else
             {

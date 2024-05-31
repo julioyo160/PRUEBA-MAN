@@ -23,6 +23,15 @@ public class Movimiento_Mantequilla : MonoBehaviour
     float axisY;
     public bool isJumping;
 
+    //Limitador
+    private bool limitadorActivo = true; // Bandera para controlar el limitador
+
+    //Scaling
+    public float minY = -4.40f; // Límite mínimo en Y
+    public float maxY = 0f;     // Límite máximo en Y
+    public Vector3 minScale = new Vector3(1.5f, 1.5f, 1.5f); // Escala mínima
+    public Vector3 maxScale = new Vector3(1f, 1f, 1f); // Escala máxima
+
 
     void Awake()
     {
@@ -39,13 +48,14 @@ public class Movimiento_Mantequilla : MonoBehaviour
 
         animator.SetFloat("Speed", Mathf.Abs(horizontal != 0 ? horizontal : vertical));
 
-        if(transform.position.y < axisY)
+        if (transform.position.y < axisY)
             OnLanding();
 
         if (Input.GetButtonDown("Jump") && !isJumping)
         {
             axisY = transform.position.y;
             isJumping = true;
+            limitadorActivo = false; //Desactivar el limitador durante el salto
             rigidbody1.gravityScale = 1.5f;
             rigidbody1.WakeUp();
             rigidbody1.AddForce(new Vector2(transform.position.x + 7.5f, jumpForce));
@@ -71,6 +81,7 @@ public class Movimiento_Mantequilla : MonoBehaviour
         if (collision.gameObject.tag == "leche")
         {
             isJumping = false;
+            limitadorActivo = true; //Reactivar el limitador al aterrizar
             rigidbody1.gravityScale = 0f;
             rigidbody1.Sleep();
             animator.SetBool("IsJumping", false);
@@ -90,9 +101,15 @@ public class Movimiento_Mantequilla : MonoBehaviour
     {
         Vector3 movement = new Vector3(horizontal * runSpeed, vertical * runSpeed, 0.0f);
         Vector3 newPosition = transform.position + movement * Time.deltaTime;
-        newPosition.y = Mathf.Clamp(newPosition.y, -4.40f, 0f); // Establece los límites minY y maxY
+
+        if (limitadorActivo)
+        {
+            newPosition.y = Mathf.Clamp(newPosition.y, -4.40f, 0f); // Establece los límites minY y maxY
+        }
+
         transform.position = newPosition;
         Flip(horizontal);
+        AdjustScaleBasedOnY(); //Ajustar la scala basada en la posicion Y
     }
 
     private void Flip(float horizontal)
@@ -101,6 +118,7 @@ public class Movimiento_Mantequilla : MonoBehaviour
         {
             facingRight = !facingRight;
 
+            //Solo invertir la escala en el eje X
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
@@ -111,6 +129,7 @@ public class Movimiento_Mantequilla : MonoBehaviour
     void OnLanding()
     {
         isJumping = false;
+        limitadorActivo = true; //Reactivar el limitador al aterrizar
         rigidbody1.gravityScale = 0f;
         rigidbody1.Sleep();
         axisY = transform.position.y;
@@ -119,6 +138,21 @@ public class Movimiento_Mantequilla : MonoBehaviour
 
     }
 
-  
+    void AdjustScaleBasedOnY()
+    {
+        //Calcular la proporcion de la posicion Y entre minY y maxY
+        float t = Mathf.InverseLerp(minY, maxY, transform.position.y);
+
+        // Interpolar entre minScale y maxScale basado en t
+        Vector3 targetScale = Vector3.Lerp(minScale, maxScale, t);
+
+        // Mantener el signo de la escala en X para el volteo horizontal
+        targetScale.x *= Mathf.Sign(transform.localScale.x);
+
+        transform.localScale = targetScale;
+    }
+
+
+
 
 }

@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 3
+  slideSpeed: 6
   jumpForce: 400
   isJumping: 0
   minY: -4.4

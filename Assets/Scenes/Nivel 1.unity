@@ -133,9 +133,11 @@ GameObject:
   m_Component:
   - component: {fileID: 288652998}
   - component: {fileID: 288652997}
+  - component: {fileID: 288652999}
+  - component: {fileID: 288653000}
   m_Layer: 0
   m_Name: Tenedor
-  m_TagString: Untagged
+  m_TagString: PickableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -200,13 +202,85 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288652996}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.48648024, w: 0.87369156}
-  m_LocalPosition: {x: 2.4517, y: -2.9384, z: 0}
-  m_LocalScale: {x: 4.1788354, y: 3.8765075, z: 3.793056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.08, y: -2.89, z: 0}
+  m_LocalScale: {x: 1.3347617, y: 1.2381953, z: 1.21154}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 58.219}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &288652999
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288652996}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 1
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.028773904, y: 0.032013252}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.94, y: 1.02}
+    newSize: {x: 0.94, y: 1.02}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.32264185, y: 0.6579672}
+  m_EdgeRadius: 0
+--- !u!50 &288653000
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288652996}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &360854755
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,7 +915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8783966794471359055, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
   spawnInterval: 3
-  maxEnemies: 4
+  maxEnemies: 1
   player: {fileID: 1383461234}
 --- !u!4 &1244904704
 Transform:
@@ -889,7 +963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8783966794471359055, guid: b4265b19a6f1f834a9ec21e983d51792, type: 3}
   spawnInterval: 3
-  maxEnemies: 5
+  maxEnemies: 1
   player: {fileID: 1383461234}
 --- !u!4 &1280345652
 Transform:
@@ -922,6 +996,7 @@ GameObject:
   - component: {fileID: 1383461238}
   - component: {fileID: 1383461239}
   - component: {fileID: 1383461240}
+  - component: {fileID: 1383461241}
   m_Layer: 3
   m_Name: Butter
   m_TagString: Player
@@ -1009,8 +1084,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 3
+  slideSpeed: 6
   jumpForce: 400
   isJumping: 0
+  minY: -4.4
+  maxY: 0
+  minScale: {x: 1.5, y: 1.5, z: 1.5}
+  maxScale: {x: 1, y: 1, z: 1}
 --- !u!95 &1383461236
 Animator:
   serializedVersion: 5
@@ -1128,9 +1208,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e749529598b03840bc47ac6f5f00827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 1000
   maxHealth: 0
   healthBar: {fileID: 1656777804}
+--- !u!114 &1383461241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383461232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40171828111207f40b8b06acc0e2fa68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newSpriteWithObject: {fileID: 21300000, guid: f46e67e7814ad484195411ad24b65d5d, type: 3}
+  pickupTriggerName: hasObject
+  spriteRenderer: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!1 &1515068949
 GameObject:
   m_ObjectHideFlags: 0

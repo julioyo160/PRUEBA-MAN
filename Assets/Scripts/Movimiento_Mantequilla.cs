@@ -13,9 +13,12 @@ public class Movimiento_Mantequilla : MonoBehaviour
     float vertical;
     bool facingRight;
 
-    //Crounch
+    //Crouch
+    bool isCrouching;
+    bool isSliding;
 
-    //Slider
+    //Slide speed
+    public float slideSpeed = 2f;
 
     //Jump
     public float jumpForce = 300;
@@ -48,6 +51,31 @@ public class Movimiento_Mantequilla : MonoBehaviour
 
         animator.SetFloat("Speed", Mathf.Abs(horizontal != 0 ? horizontal : vertical));
 
+        if (Input.GetButton("Crouch"))
+        {
+            if (horizontal != 0) // Si el personaje está moviéndose horizontalmente
+            {
+                isSliding = true;
+                isCrouching = false;
+                animator.SetBool("IsSliding", true);
+                animator.SetBool("IsCrouching", false);
+            }
+            else // Si el personaje está quieto
+            {
+                isSliding = false;
+                isCrouching = true;
+                animator.SetBool("IsSliding", false);
+                animator.SetBool("IsCrouching", true);
+            }
+        }
+        else
+        {
+            isSliding = false;
+            isCrouching = false;
+            animator.SetBool("IsSliding", false);
+            animator.SetBool("IsCrouching", false);
+        }
+
         if (transform.position.y < axisY)
             OnLanding();
 
@@ -58,7 +86,7 @@ public class Movimiento_Mantequilla : MonoBehaviour
             limitadorActivo = false; //Desactivar el limitador durante el salto
             rigidbody1.gravityScale = 1.5f;
             rigidbody1.WakeUp();
-            rigidbody1.AddForce(new Vector2(transform.position.x + 7.5f, jumpForce));
+            rigidbody1.AddForce(new Vector2(0, jumpForce));
             animator.SetBool("IsJumping", isJumping);
             Debug.Log("salto");
         }
@@ -67,8 +95,6 @@ public class Movimiento_Mantequilla : MonoBehaviour
         {
             animator.SetBool("isAtacking", true);
         }
-
-
     }
 
     public void endAttack()
@@ -99,12 +125,23 @@ public class Movimiento_Mantequilla : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 movement = new Vector3(horizontal * runSpeed, vertical * runSpeed, 0.0f);
-        Vector3 newPosition = transform.position + movement * Time.deltaTime;
+        Vector3 newPosition = transform.position;
+
+        if ((horizontal != 0 || vertical != 0) && !isCrouching && !isSliding)
+        {
+            Vector3 movement = new Vector3(horizontal * runSpeed, vertical * runSpeed, 0.0f);
+            newPosition += movement * Time.deltaTime;
+        }
+
+        if (isSliding)
+        {
+            Vector3 slideMovement = new Vector3(horizontal * slideSpeed, 0.0f, 0.0f);
+            newPosition += slideMovement * Time.deltaTime;
+        }
 
         if (limitadorActivo)
         {
-            newPosition.y = Mathf.Clamp(newPosition.y, -4.40f, 0f); // Establece los límites minY y maxY
+            newPosition.y = Mathf.Clamp(newPosition.y, minY, maxY); // Establece los límites minY y maxY
         }
 
         transform.position = newPosition;
@@ -151,8 +188,4 @@ public class Movimiento_Mantequilla : MonoBehaviour
 
         transform.localScale = targetScale;
     }
-
-
-
-
 }

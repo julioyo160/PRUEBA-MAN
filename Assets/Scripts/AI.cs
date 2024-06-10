@@ -8,70 +8,91 @@ public class AI : MonoBehaviour
     public float distanceBetween;
 
     private Animator animator;
+    private Rigidbody2D rb;
     public GameObject player;
+    private Spawner spawner; // Referencia al spawner
     private float distance;
     private Vector2 lastPosition;
+    private bool facingRight = true; // Indica la dirección en la que está mirando el enemigo
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
         lastPosition = transform.position;
-        // Establece la rotación inicial del objeto hacia la derecha
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        // Desactivar la gravedad
+        rb.gravityScale = 0;
+
+        // Buscar el jugador en la escena si no se ha asignado
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
+
+        // Encontrar el spawner en la escena
+        spawner = FindObjectOfType<Spawner>();
     }
 
     void Update()
     {
         if (player != null)
         {
-            distance = Vector2.Distance(transform.position, player.transform.position);
-            Vector2 direction = player.transform.position - transform.position;
+            Vector2 direction = (Vector2)player.transform.position - rb.position;
             direction.Normalize();
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            if (distance < distanceBetween)
+            rb.velocity = direction * speed;
+
+            // Si está moviéndose, activa el parámetro booleano "IsWalking"
+            animator.SetBool("IsWalking", true);
+
+            // Voltear el sprite según la dirección en la que se esté moviendo
+            if (direction.x > 0 && !facingRight)
             {
-                transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-
-                // Si está moviéndose, activa el parámetro booleano "IsWalking"
-                animator.SetBool("IsWalking", true);
-
-                // Actualiza la última posición mientras se mueve
-                lastPosition = transform.position;
-
-                // Gira el objeto según la dirección en la que se esté moviendo
-                if (direction.x > 0)
-                {
-                    transform.rotation = Quaternion.Euler(0, 180, 0); // Orientación hacia la derecha
-                }
-                else if (direction.x < 0)
-                {
-                    transform.rotation = Quaternion.Euler(0, 0, 0); // Orientación hacia la izquierda
-                }
+                Flip();
             }
-            else
+            else if (direction.x < 0 && facingRight)
             {
-                // Si no está dentro de la distancia, desactiva el parámetro booleano "IsWalking"
-                animator.SetBool("IsWalking", false);
+                Flip();
             }
         }
     }
 
+    void Flip()
+    {
+        // Cambiar la dirección en la que está mirando el enemigo
+        facingRight = !facingRight;
+
+        // Multiplicar la escala x por -1 para voltear el sprite
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject == player)
+        if (other.CompareTag("Player"))
         {
             // Cuando el jugador entra en el trigger hijo, activa la animación de daño
-            animator.SetBool("daño", true);
+            animator.SetTrigger("HitPlayer");
+        }
+
+        if (other.CompareTag("PlayerAttack"))
+        {
+            // Cuando el enemigo recibe un golpe del jugador, notificar al spawner y destruir el enemigo
+            if (spawner != null)
+            {
+                spawner.EnemyDefeated();
+            }
+            Destroy(gameObject);
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject == player)
+        if (other.CompareTag("Player"))
         {
             // Cuando el jugador sale del trigger hijo, desactiva la animación de daño
-            animator.SetBool("daño", false);
+            animator.ResetTrigger("HitPlayer");
         }
     }
 

@@ -40,3 +40,4 @@ public class ParallaxBackground : MonoBehaviour
         previousCamPos = camTransform.position;
     }
 }
+    

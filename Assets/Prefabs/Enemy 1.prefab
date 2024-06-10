@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80e1556571982d489808bafa016bccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pHealth: {fileID: 0}
   damage: 20
   "tiempoEntreDa\xF1o": 2
   playerInside: 0

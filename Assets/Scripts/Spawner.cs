@@ -27,7 +27,11 @@ public class Spawner : MonoBehaviour
         // Creamos una instancia del enemigo en la posición del spawner
         GameObject newEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
         // Configuramos la referencia al jugador para que el enemigo sepa hacia dónde ir
-        newEnemy.GetComponent<AI>().player = player.gameObject;
+        AI enemyScript = newEnemy.GetComponent<AI>();
+        if (enemyScript != null)
+        {
+            enemyScript.SetPlayer(player.gameObject);
+        }
         currentEnemies++; // Incrementamos el contador de enemigos
     }
 

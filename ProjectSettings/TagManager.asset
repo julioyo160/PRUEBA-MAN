@@ -8,6 +8,7 @@ TagManager:
   - leche
   - Tenedor
   - PickableObject
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX
